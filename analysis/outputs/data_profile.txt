@@ -1,0 +1,27 @@
+Rows: 66,475
+Unique regions: 391
+Date range: 2011-01-01 → 2026-01-01
+Unique area-code prefixes: ['E06', 'E07', 'E08', 'E09', 'E10', 'E11', 'E12', 'E13', 'E92', 'K03', 'S12', 'S92', 'W06', 'W92']
+
+Missing values per column:
+Date            0
+region          0
+code            0
+ftb_price       0
+ftb_index       0
+ftb_m_pct     391
+ftb_y_pct    4692
+foo_price     396
+foo_index     396
+foo_m_pct     787
+foo_y_pct    5088
+prefix          0
+is_lad          0
+
+Country-level series first non-null FTB price:
+  United Kingdom  (K03000001): 2012-01-01 00:00:00
+  England         (E92000001): 2012-01-01 00:00:00
+  Scotland        (S92000003): 2011-01-01 00:00:00
+  Wales           (W92000004): 2012-01-01 00:00:00
+
+LADs total: 349; starting after 2012: 0
