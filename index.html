@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>UK First-Time Buyer Price Analysis, 2011–2026</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+         sans-serif; max-width: 880px; margin: 2rem auto; padding: 0 1rem;
+         color: #222; line-height: 1.5; }
+  h1 { margin-bottom: 0.2rem; }
+  .lead { color: #555; margin-top: 0; }
+  .card { border: 1px solid #ddd; border-radius: 8px; padding: 1rem 1.2rem;
+          margin: 1rem 0; background: #fafafa; }
+  .card h3 { margin-top: 0; }
+  a.btn { display: inline-block; padding: 0.45rem 0.9rem; margin-right: 0.4rem;
+          border-radius: 6px; background: #2a9d8f; color: #fff;
+          text-decoration: none; font-weight: 500; }
+  a.btn.alt { background: #264653; }
+  a.btn.ghost { background: #fff; color: #264653; border: 1px solid #264653; }
+  img { max-width: 100%; border: 1px solid #e0e0e0; border-radius: 6px; }
+  footer { margin-top: 2rem; color: #888; font-size: 0.85rem; }
+  code { background: #eee; padding: 0 0.3em; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<h1>UK First-Time Buyer Price Analysis, 2011&ndash;2026</h1>
+<p class="lead">Local Authority District price trends with CPIH-adjusted
+real-terms growth and loss statistics.</p>
+
+<div class="card">
+<h3>Headline (real terms, CPIH-deflated)</h3>
+<ul>
+  <li>UK nominal FTB price is up <strong>+72%</strong> since 2012 — but
+    only <strong>+18.7% in real terms</strong> once 47% CPIH inflation is stripped out.</li>
+  <li><strong>20 of 349 LADs saw real FTB prices <em>fall</em></strong>
+    over the full 2012&ndash;2026 period. City of Aberdeen is worst at <strong>&minus;48% real</strong>.</li>
+  <li>In the latest 12 months to Jan 2026, <strong>221 of 349 LADs fell
+    in real terms</strong> (median &minus;0.8%). Nominal stagnation is real decline almost everywhere.</li>
+  <li>Genuine real-terms winners over 14 years: Salford +56%, Manchester
+    +51%, Waltham Forest +50%, Oldham +46%, Tameside +44%.</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>Interactive maps</h3>
+<p>Year-by-year choropleth, drag the slider or press Play.</p>
+<p>
+<a class="btn" href="analysis/outputs/uk_ftb_interactive_real.html">Real&nbsp;£ (Jan&nbsp;2026 £)</a>
+<a class="btn alt" href="analysis/outputs/uk_ftb_interactive.html">Nominal&nbsp;£</a>
+</p>
+</div>
+
+<div class="card">
+<h3>Static maps</h3>
+<p><strong>Real-terms</strong> growth/loss, 2012 &rarr; Jan 2026:</p>
+<a href="analysis/outputs/map_full_period_real.png">
+  <img alt="Real full-period choropleth" src="analysis/outputs/map_full_period_real.png">
+</a>
+<p><strong>Real-terms</strong> latest 12 months:</p>
+<a href="analysis/outputs/map_latest_12m_real.png">
+  <img alt="Real 12-month choropleth" src="analysis/outputs/map_latest_12m_real.png">
+</a>
+</div>
+
+<div class="card">
+<h3>Full report &amp; data</h3>
+<p>
+<a class="btn ghost" href="https://github.com/msicrow/uk-first-time-buyer-analysis/blob/main/analysis/report.md">Full analysis report</a>
+<a class="btn ghost" href="analysis/outputs/county_stats.csv">Per-LAD CSV</a>
+<a class="btn ghost" href="https://github.com/msicrow/uk-first-time-buyer-analysis">GitHub repo</a>
+</p>
+</div>
+
+<footer>
+Data: HM Land Registry FTB / Former-owner-occupier series (extract
+2026-01); deflator ONS CPIH All-Items Index (series L522);
+boundaries ONS 2013 via <code>martinjc/UK-GeoJSON</code>.
+</footer>
+
+</body>
+</html>
