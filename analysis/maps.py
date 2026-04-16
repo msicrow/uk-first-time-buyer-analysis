@@ -106,31 +106,66 @@ def diverging_choropleth(gdf: gpd.GeoDataFrame, column: str, title: str,
 def build_static_maps(stats: pd.DataFrame, gdf: gpd.GeoDataFrame) -> None:
     merged = expand_stats(stats, gdf)
 
+    # REAL-TERMS full period (headline map).
+    hi = stats["growth_full_real_pct"].max()
+    lo = stats["growth_full_real_pct"].min()
+    n = stats["growth_full_real_pct"].notna().sum()
+    n_down = (stats["growth_full_real_pct"] < 0).sum()
+    diverging_choropleth(
+        merged, "growth_full_real_pct",
+        title=(f"REAL FTB price change 2012 → Jan 2026 by UK LAD "
+               f"(CPIH-deflated)\n"
+               f"Range {lo:+.0f}% to {hi:+.0f}%   "
+               f"{n_down}/{n} LADs fell in real terms   "
+               f"Grey = no data or outside GB"),
+        outfile=OUT / "map_full_period_real.png")
+
+    # NOMINAL full period (reference).
     hi = stats["growth_full_pct"].max()
     lo = stats["growth_full_pct"].min()
-    n = stats["growth_full_pct"].notna().sum()
     diverging_choropleth(
         merged, "growth_full_pct",
-        title=(f"FTB price change 2012 → Jan 2026 by UK LAD\n"
-               f"Range {lo:+.0f}% to {hi:+.0f}%   n={n} LADs   "
-               f"Grey = no data or outside GB"),
+        title=(f"NOMINAL FTB price change 2012 → Jan 2026 by UK LAD\n"
+               f"Range {lo:+.0f}% to {hi:+.0f}%   "
+               f"(ignores +47% CPIH inflation over the period)"),
         outfile=OUT / "map_full_period.png")
 
+    # REAL-TERMS latest 12 months.
+    hi = stats["growth_1y_real_pct"].max()
+    lo = stats["growth_1y_real_pct"].min()
+    n_down_1y = (stats["growth_1y_real_pct"] < 0).sum()
+    diverging_choropleth(
+        merged, "growth_1y_real_pct",
+        title=(f"REAL FTB price change, last 12 months to Jan 2026 "
+               f"(CPIH-deflated)\n"
+               f"Range {lo:+.0f}% to {hi:+.0f}%   "
+               f"{n_down_1y}/{n} LADs fell in real terms this year"),
+        outfile=OUT / "map_latest_12m_real.png")
+
+    # NOMINAL latest 12 months (reference).
     hi = stats["growth_1y_pct"].max()
     lo = stats["growth_1y_pct"].min()
     diverging_choropleth(
         merged, "growth_1y_pct",
-        title=(f"FTB price change latest 12 months to Jan 2026 by UK LAD\n"
-               f"Range {lo:+.0f}% to {hi:+.0f}%   Red = falling, Green = rising"),
+        title=(f"NOMINAL FTB price change, last 12 months to Jan 2026\n"
+               f"Range {lo:+.0f}% to {hi:+.0f}%   "
+               f"Red = falling, Green = rising"),
         outfile=OUT / "map_latest_12m.png")
 
 
-def interactive_map(stats: pd.DataFrame, gdf: gpd.GeoDataFrame) -> None:
+def interactive_map(stats: pd.DataFrame, gdf: gpd.GeoDataFrame,
+                    real: bool = False) -> None:
     """Plotly choropleth with year slider.
 
     Uses go.Figure with frames that only update the `z`/hovertext arrays;
     the geojson is embedded once at layout level, so the HTML stays small.
+
+    If ``real`` is True, the map shows CPIH-deflated prices in Jan 2026 £
+    and is written to ``uk_ftb_interactive_real.html``; otherwise nominal
+    prices, ``uk_ftb_interactive.html``.
     """
+    from inflation import deflator  # local import to avoid circular
+
     df = pd.read_csv(DATA, parse_dates=["Date"])
     df = df.rename(columns={
         "Region_Name": "region", "Area_Code": "code",
@@ -139,6 +174,11 @@ def interactive_map(stats: pd.DataFrame, gdf: gpd.GeoDataFrame) -> None:
         "First_Time_Buyer_Annual_Change": "ftb_y_pct",
     })
     df = df[df["code"].str[:3].isin(["E06","E07","E08","E09","S12","W06"])]
+    if real:
+        infl = deflator(pd.Timestamp("2026-01-01"))
+        df = df.merge(infl.rename("deflator"), left_on="Date",
+                      right_index=True, how="left")
+        df["ftb_price"] = df["ftb_price"] * df["deflator"]
     df["year"] = df["Date"].dt.year
     yearly = (df.groupby(["year", "region", "code"])
               [["ftb_price", "ftb_index", "ftb_y_pct"]].mean().reset_index())
@@ -196,22 +236,25 @@ def interactive_map(stats: pd.DataFrame, gdf: gpd.GeoDataFrame) -> None:
             text=initial.text,
             hoverinfo="text",
             colorscale="Viridis",
-            zmin=50_000, zmax=600_000,
+            zmin=50_000,
+            zmax=(1_100_000 if real else 600_000),
             marker_line_width=0.2,
             marker_line_color="white",
-            colorbar=dict(title="FTB avg<br>price (£)"),
+            colorbar=dict(title=("Real FTB<br>price (Jan 2026 £)"
+                                 if real else "FTB avg<br>price (£)")),
         )],
         frames=frames,
     )
 
+    kind = "real (Jan 2026 £, CPIH-deflated)" if real else "nominal"
     fig.update_layout(
         mapbox_style="carto-positron",
         mapbox_center={"lat": 54.5, "lon": -3.3},
         mapbox_zoom=4.6,
         margin=dict(l=0, r=0, t=60, b=0),
         height=780,
-        title="UK first-time-buyer average price by LAD, 2011–2026"
-              "  (use the slider or Play to step through years)",
+        title=(f"UK first-time-buyer {kind} price by LAD, 2011–2026"
+               "  (use the slider or Play to step through years)"),
         sliders=[dict(
             active=0,
             currentvalue={"prefix": "Year: "},
@@ -238,14 +281,17 @@ def interactive_map(stats: pd.DataFrame, gdf: gpd.GeoDataFrame) -> None:
             x=0.02, y=0.02, xanchor="left", yanchor="bottom",
         )],
     )
-    fig.write_html(OUT / "uk_ftb_interactive.html", include_plotlyjs="cdn")
+    outfile = ("uk_ftb_interactive_real.html" if real
+               else "uk_ftb_interactive.html")
+    fig.write_html(OUT / outfile, include_plotlyjs="cdn")
 
 
 def main() -> None:
     stats = pd.read_csv(OUT / "county_stats.csv")
     gdf = load_boundaries()
     build_static_maps(stats, gdf)
-    interactive_map(stats, gdf)
+    interactive_map(stats, gdf, real=False)
+    interactive_map(stats, gdf, real=True)
     print("Maps written to", OUT)
 
 

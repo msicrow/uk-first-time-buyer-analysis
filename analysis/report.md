@@ -2,34 +2,37 @@
 
 ## Answer up front
 
-UK first-time-buyer (FTB) average prices have risen **+72% since 2012**
-(£131k → £226k), but the county-level picture is highly uneven: growth
-ranges from **+127% in Salford to −24% in City of Aberdeen**, with
-prime-central-London boroughs now falling sharply even as the rest of
-the UK continues to rise.
+Once CPIH inflation is stripped out, the picture is far less rosy than
+the headline numbers suggest:
 
-Three patterns dominate the data:
+- **UK nominal FTB price growth was +72.4% (2012 → Jan 2026) but only
+  +18.7% in real terms**, because CPIH inflation was +47.2% over the
+  same period. Roughly two-thirds of what looks like "house-price
+  growth" since 2012 was general inflation.
+- **20 of 349 Local Authority Districts saw real FTB prices *fall*
+  across the full period.** The worst is **City of Aberdeen at −48%
+  real**; Kensington & Chelsea, Aberdeenshire, Westminster and
+  Hammersmith & Fulham all fell 14–25% in real terms.
+- **In the latest 12 months to Jan 2026, 221 of 349 LADs saw real FTB
+  prices fall** (median −0.8% real). So even the recent "flat-to-rising"
+  nominal picture hides a broad real-terms cooling.
+- Some LADs still posted strong real gains: **Salford +56%, Manchester
+  +51%, Waltham Forest +50%, Oldham +46%, Tameside +44%** over 14 years
+  — the only genuinely large real-terms growth cluster is former
+  industrial northern England plus a handful of outer-London boroughs.
 
-1. **Former industrial northern cities have converged toward the UK
-   average.** Salford, Manchester, Oldham, Tameside, Rochdale and Bury
-   all more than doubled. These are the single largest growth cluster
-   on the map.
-2. **Prime central London is in a multi-year correction.** Kensington
-   & Chelsea, Westminster, Camden, Hammersmith & Fulham, Tower Hamlets
-   and the City are all the worst performers in the last 12 months
-   (−6% to −12%) **and** sit in the bottom-10 for full-period growth.
-3. **The affordability gap between FTBs and former owner-occupiers has
-   widened from about £64k in 2012 to £103k today** (UK), so even where
-   FTB prices have risen slowly, deposit/income requirements have
-   tightened relative to the rest of the market.
+All subsequent figures are **real (CPIH-deflated, in January 2026 £)**
+unless explicitly labelled "nominal".
 
-![UK FTB price change 2012 → Jan 2026 by LAD](outputs/map_full_period.png)
+![Real FTB price change 2012 → Jan 2026 by LAD](outputs/map_full_period_real.png)
 
-![UK FTB price change in the latest 12 months](outputs/map_latest_12m.png)
+![Real FTB price change latest 12 months](outputs/map_latest_12m_real.png)
 
-An interactive, year-by-year version is at
-[`outputs/uk_ftb_interactive.html`](outputs/uk_ftb_interactive.html)
-(drag the slider or press Play).
+Nominal equivalents are at [`outputs/map_full_period.png`](outputs/map_full_period.png)
+and [`outputs/map_latest_12m.png`](outputs/map_latest_12m.png).
+
+Year-by-year interactive maps: [nominal](outputs/uk_ftb_interactive.html)
+· [real (Jan 2026 £)](outputs/uk_ftb_interactive_real.html).
 
 ## Dataset and method
 
@@ -38,142 +41,184 @@ An interactive, year-by-year version is at
 | Source | HM Land Registry FTB / Former-owner-occupier series, extract 2026-01 |
 | Rows | 66,476 monthly observations |
 | Date range | 2011-01-01 to 2026-01-01 |
-| Unique regions | 391 (349 Local Authority Districts + nation/UK aggregates) |
+| Unique regions | 391 (349 LADs + nation/UK aggregates) |
 | LAD boundaries | ONS 2013 (via `martinjc/UK-GeoJSON` mirror) |
+| Deflator | ONS CPIH All Items Index (series L522, 2015 = 100) |
+
+**Why CPIH.** CPIH is ONS's preferred inflation measure and, unlike
+headline CPI, includes owner-occupier housing costs, making it a more
+defensible deflator for a housing analysis. RPI remains in common use
+but is no longer a National Statistic.
 
 **Baseline choice.** UK, England and Wales aggregates in this extract
 start in January 2012; only Scottish LADs have 2011 data. All
-full-period growth figures below therefore use the **2012 full-year
-mean** as the baseline, which keeps cross-nation comparisons aligned.
+full-period growth figures therefore use the **2012 full-year mean**
+as the baseline, which keeps cross-nation comparisons aligned.
+
+**Deflation convention.** Prices are expressed in January 2026 £. A
+2012-vintage nominal £100,000 becomes £147,200 in Jan 2026 £ (CPIH Jan
+2012 = 94.7, Jan 2026 = 139.4).
 
 **Code reconciliation.** The dataset carries post-2013 LAD codes for
 the 2019–2023 unitary reorganisations (Dorset, Buckinghamshire,
 Somerset, North Yorkshire, Cumberland, Westmorland & Furness, North/West
-Northamptonshire, East/West Suffolk, BCP). We expanded each new code
+Northamptonshire, East/West Suffolk, BCP). Each new code is expanded
 onto its constituent 2013 polygons so that the new unitary's FTB value
 is rendered across the same geographic footprint. Only **Isles of
 Scilly** is absent (not present in the FTB series).
 
 **Caveats.**
 - Northern Ireland is not in the FTB series and does not appear.
-- The "growth" metric here is unsmoothed average price; mix effects
-  (what sort of homes first-time buyers actually purchase each year)
-  are not adjusted for, so year-on-year numbers can be volatile in
-  small or high-value LADs.
-- The 2012 baseline understates total growth for Scotland vs. 2011.
+- "Growth" here is unsmoothed average price; mix effects (what sort of
+  homes FTBs actually bought each year) are not adjusted for, so small
+  or high-value LADs can show jumpy monthly numbers.
+- CPIH itself is a UK-wide deflator; using it on LAD prices implicitly
+  assumes broadly similar inflation across regions.
+- The real-terms comparisons for Scottish LADs technically start 2011,
+  but we normalise all LADs to the 2012 baseline for comparability, so
+  Scotland's real growth is mildly understated relative to a
+  2011-baseline view.
 
 ## National trend
 
-![National trend](outputs/national_trend.png)
+![National trend — nominal and real side by side](outputs/national_trend.png)
 
-| Nation | Baseline (2011/12) | Jan 2026 | Total % | CAGR % | Latest 12m % | FTB ÷ FOO |
-|---|---:|---:|---:|---:|---:|---:|
-| UK       | £131,358 (2012) | £226,465 | +72.4 | +4.09 | +1.3 | 0.69 |
-| England  | £140,077 (2012) | £243,308 | +73.7 | +4.15 | +1.2 | 0.69 |
-| Scotland | £102,836 (2011) | £154,711 | +50.4 | +2.84 | +1.9 | 0.66 |
-| Wales    | £103,586 (2012) | £180,859 | +74.6 | +4.19 | +2.4 | 0.72 |
+| Nation | Baseline £ (2011/12) | Jan 2026 £ | Nominal % | Real % | CAGR real | Latest 12m nominal | Latest 12m real |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| UK       | 131,358 (2012) | 226,465 | +72.4 | **+18.7** | +1.27 | +1.3 | **−1.8** |
+| England  | 140,077 (2012) | 243,308 | +73.7 | +19.6 | +1.32 | +1.2 | −1.8 |
+| Scotland | 102,836 (2011) | 154,711 | +50.4 | +2.2  | +0.15 | +1.9 | −1.1 |
+| Wales    | 103,586 (2012) | 180,859 | +74.6 | +20.3 | +1.37 | +2.4 | −0.6 |
 
-Key observations:
-- **Scotland is the most affordable nation and has grown the slowest.**
-  This reflects its comparatively modest 2013–2019 expansion and a
-  distinct Aberdeen-area oil-price shock that pulled the aggregate down.
-- **Wales is currently the hottest nation at +2.4% year-on-year**, vs.
-  +1.3% for the UK as a whole.
-- **The FTB/FOO ratio has barely moved since 2012** (UK ≈ 0.69): FTBs
-  are still buying properties priced ~31% below the market average.
-  But because both have appreciated by similar percentages, the
-  absolute cash gap has widened from about £64k to £103k.
+Key observations (real terms):
+- **Scotland's real FTB price is flat across 14 years** (+2% real).
+  Almost all the apparent price rise there was inflation, and the
+  Aberdeen oil shock dragged the national average down.
+- **UK real growth of +19% over 14 years ≈ +1.3% CAGR.** Small
+  compared to the cultural narrative that "house prices keep going up".
+- **The latest 12-month real figure is negative for every nation.**
+  Nominal rises of +1.3% to +2.4% look positive but fall short of
+  the ~3% CPIH inflation over the same year.
 
-## Top and bottom LADs (full period)
+## Real-terms winners and losers (full period)
 
-![Top and bottom 10 LAD growth](outputs/top_bottom_growth.png)
+![Top/bottom 10 LADs by real growth](outputs/top_bottom_growth.png)
 
-**Top 10 (2012 → Jan 2026)** — almost entirely Greater Manchester plus
-outer-London boroughs:
+**Top 10 by real growth (2012 → Jan 2026):**
 
-| LAD | Code | 2012 £ | Jan 2026 £ | % change | CAGR |
-|---|---|---:|---:|---:|---:|
-| Salford | E08000006 | 91,523 | 208,046 | +127.3% | +6.23% |
-| Manchester | E08000003 | 108,491 | 237,580 | +119.0% | +5.94% |
-| Waltham Forest | E09000031 | 217,669 | 475,595 | +118.5% | +5.92% |
-| Oldham | E08000004 | 91,829 | 195,108 | +112.5% | +5.70% |
-| Tameside | E08000008 | 92,916 | 194,304 | +109.1% | +5.58% |
-| Barking and Dagenham | E09000002 | 164,623 | 343,754 | +108.8% | +5.57% |
-| Trafford | E08000009 | 149,929 | 308,187 | +105.6% | +5.45% |
-| Rochdale | E08000005 | 92,016 | 186,832 | +103.0% | +5.35% |
-| Bury | E08000002 | 103,602 | 210,088 | +102.8% | +5.34% |
-| Bexley | E09000004 | 178,798 | 362,151 | +102.5% | +5.33% |
+| LAD | Code | Nominal % | **Real %** | Real CAGR |
+|---|---|---:|---:|---:|
+| Salford | E08000006 | +127.3 | **+56.4** | +3.34 |
+| Manchester | E08000003 | +119.0 | **+50.6** | +3.06 |
+| Waltham Forest | E09000031 | +118.5 | **+50.3** | +3.04 |
+| Oldham | E08000004 | +112.5 | **+46.2** | +2.83 |
+| Tameside | E08000008 | +109.1 | **+43.8** | +2.71 |
+| Barking and Dagenham | E09000002 | +108.8 | +43.6 | +2.70 |
+| Trafford | E08000009 | +105.6 | +41.4 | +2.57 |
+| Rochdale | E08000005 | +103.0 | +37.9 | +2.31 |
+| Bury | E08000002 | +102.8 | +37.8 | +2.30 |
+| Bexley | E09000004 | +102.5 | +37.6 | +2.29 |
 
-**Bottom 10** — prime central London plus north-east Scotland:
+**Bottom 10 by real growth (full-period real losses):**
 
-| LAD | Code | 2012 £ | Jan 2026 £ | % change | CAGR |
-|---|---|---:|---:|---:|---:|
-| City of Aberdeen | S12000033 | 149,574 | 113,765 | **−23.9%** | −1.99% |
-| Kensington and Chelsea | E09000020 | 940,168 | 1,031,685 | +9.7% | +0.69% |
-| Aberdeenshire | S12000034 | 141,975 | 156,433 | +10.2% | +0.72% |
-| City of Westminster | E09000033 | 666,312 | 812,682 | +22.0% | +1.47% |
-| Hammersmith and Fulham | E09000013 | 511,143 | 634,628 | +24.2% | +1.61% |
-| Na h-Eileanan Siar | S12000013 | 88,243 | 110,555 | +25.3% | +1.67% |
-| Inverclyde | S12000018 | 71,597 | 94,556 | +32.1% | +2.07% |
-| Camden | E09000007 | 514,309 | 690,930 | +34.3% | +2.20% |
-| City of Dundee | S12000042 | 90,301 | 121,603 | +34.7% | +2.21% |
-| Angus | S12000041 | 101,556 | 139,417 | +37.3% | +2.36% |
+| LAD | Code | Nominal % | **Real %** | Real CAGR |
+|---|---|---:|---:|---:|
+| City of Aberdeen | S12000033 | −23.9 | **−47.7** | −4.66 |
+| Kensington and Chelsea | E09000020 | +9.7 | **−24.5** | −2.05 |
+| Aberdeenshire | S12000034 | +10.2 | **−24.2** | −2.02 |
+| City of Westminster | E09000033 | +22.0 | **−16.1** | −1.28 |
+| Hammersmith and Fulham | E09000013 | +24.2 | **−14.6** | −1.15 |
+| Na h-Eileanan Siar | S12000013 | +25.3 | −13.9 | −1.09 |
+| Inverclyde | S12000018 | +32.1 | −9.2 | −0.71 |
+| Camden | E09000007 | +34.3 | −7.6 | −0.58 |
+| City of Dundee | S12000042 | +34.7 | −7.4 | −0.56 |
+| Angus | S12000041 | +37.3 | −5.6 | −0.42 |
 
-**City of Aberdeen is the only LAD in the dataset where the FTB price
-is lower in 2026 than it was in 2012.** This is consistent with the
-oil-price collapse that began in 2014 and which appears never to have
-been fully recovered in the local housing market.
+**All 20 LADs with full-period real price falls:** Aberdeen, Aberdeenshire,
+K&C, Westminster, Hammersmith & Fulham, Na h-Eileanan Siar, Inverclyde,
+Camden, Dundee, Angus, City of London, Middlesbrough, Hartlepool, Fylde,
+Gateshead, Ribble Valley, Redcar and Cleveland, Stockton-on-Tees,
+Wandsworth, South Hams.
 
-## Latest 12 months — who is rising and falling now?
+Two distinct clusters: **inner London boroughs in a prime-market
+correction** and **north-east England + Aberdeen / rural Scotland in
+slow-growth or declining markets**.
 
-**Top 10 growth, 12 months to Jan 2026:**
+## Latest 12 months — real terms
 
-| LAD | 12-month % |
-|---|---:|
-| Orkney Islands | +11.1% |
-| Forest of Dean | +8.9% |
-| East Cambridgeshire | +8.7% |
-| Northumberland | +8.3% |
-| North Lanarkshire | +7.7% |
-| West Dunbartonshire | +7.5% |
-| Liverpool | +7.4% |
-| South Lanarkshire | +7.3% |
-| South Tyneside | +7.2% |
-| North Ayrshire | +6.9% |
+**Top 10 real growth, 12 months to Jan 2026:**
 
-**Bottom 10 (biggest falls), 12 months to Jan 2026:**
+| LAD | Nominal % | **Real %** |
+|---|---:|---:|
+| Orkney Islands | +11.1 | **+7.7** |
+| Forest of Dean | +8.9 | +5.6 |
+| East Cambridgeshire | +8.7 | +5.4 |
+| Northumberland | +8.3 | +5.0 |
+| North Lanarkshire | +7.7 | +4.4 |
+| West Dunbartonshire | +7.5 | +4.2 |
+| Liverpool | +7.4 | +4.1 |
+| South Lanarkshire | +7.3 | +4.0 |
+| South Tyneside | +7.2 | +3.9 |
+| North Ayrshire | +6.9 | +3.6 |
 
-| LAD | 12-month % |
-|---|---:|
-| Kensington and Chelsea | −12.3% |
-| City of Westminster | −10.2% |
-| Tower Hamlets | −9.1% |
-| Camden | −8.8% |
-| Hammersmith and Fulham | −6.3% |
-| City of London | −6.2% |
-| Shetland Islands | −5.9% |
-| Rutland | −5.4% |
-| North Norfolk | −5.1% |
-| Na h-Eileanan Siar | −4.8% |
+**Bottom 10 real growth (biggest real falls in last 12 months):**
 
-Six of the ten steepest 12-month falls are inner-London boroughs; the
-rest are low-volume rural/island markets where single transactions can
-move the monthly average several percent.
+| LAD | Nominal % | **Real %** |
+|---|---:|---:|
+| Kensington and Chelsea | −12.3 | **−15.0** |
+| City of Westminster | −10.2 | −12.9 |
+| Tower Hamlets | −9.1 | −11.8 |
+| Camden | −8.8 | −11.6 |
+| Hammersmith and Fulham | −6.3 | −9.1 |
+| City of London | −6.2 | −9.1 |
+| Shetland Islands | −5.9 | −8.8 |
+| Rutland | −5.4 | −8.3 |
+| North Norfolk | −5.1 | −8.0 |
+| Na h-Eileanan Siar | −4.8 | −7.7 |
+
+**Headline real-terms finding for the last year: 221 of 349 LADs saw
+real FTB prices fall (median −0.8% real).** Prime central London
+extends its multi-year correction at double-digit rates; most of the
+rest of the UK is gently slipping in real terms.
+
+## Last 5 years in real terms
+
+The 5-year view (Jan 2021 → Jan 2026) shows the same two-tier story
+even more sharply:
+
+**Top 5 real growth over 5 years:** Orkney Islands +11.6%, Rochdale
++10.6%, Oldham +10.5%, Blaenau Gwent +9.0%, St Helens +7.5%.
+
+**Bottom 5 real growth over 5 years:** Kensington and Chelsea −33.0%,
+City of Aberdeen −31.3%, Tower Hamlets −29.1%, Westminster −29.0%,
+Lambeth −26.7%.
+
+Inner-London boroughs have lost about **a quarter to a third of their
+real FTB price** since 2021.
 
 ## Affordability gap (UK)
 
-![FTB vs FOO gap](outputs/affordability_gap.png)
+![FTB vs FOO gap, nominal and real](outputs/affordability_gap.png)
 
-The gap between what first-time buyers and former owner-occupiers
-typically pay has widened from **≈£64k in 2012 to ≈£103k in 2026** (UK
-aggregate) despite the FTB/FOO price *ratio* staying near 0.69
-throughout. The cash gap matters for deposit requirements; a 10%
-deposit at the UK FTB average alone has increased from ~£13k to ~£23k
-over the period.
+| Measure | 2012 | Jan 2026 |
+|---|---:|---:|
+| UK FTB price (nominal) | £131,358 | £226,465 |
+| UK FOO price (nominal) | £191,683 | £329,867 |
+| Gap (nominal) | £60,324 | £103,402 |
+| FTB ÷ FOO ratio | 0.685 | 0.687 |
+| UK FTB price (Jan 2026 £) | £190,745 | £226,465 |
+| UK FOO price (Jan 2026 £) | £278,342 | £329,867 |
+| **Gap (Jan 2026 £)** | **£87,597** | **£103,402** |
+
+After deflation, the FTB/FOO cash gap widened from **~£88k to ~£103k
+(2026 £)** over 14 years — a real widening of around £16k, not £43k as
+the nominal numbers suggest. The *ratio* is essentially unchanged
+(0.68 → 0.69), consistent with both FTB and FOO prices appreciating
+at broadly similar real rates.
 
 ## Price levels today (Jan 2026)
 
-**Most expensive LADs**
+**Most expensive LADs** (nominal = real at the reference date):
 
 | LAD | Latest FTB £ |
 |---|---:|
@@ -183,7 +228,7 @@ over the period.
 | Camden | 690,930 |
 | Hammersmith and Fulham | 634,628 |
 
-**Cheapest LADs**
+**Cheapest LADs:**
 
 | LAD | Latest FTB £ |
 |---|---:|
@@ -193,20 +238,24 @@ over the period.
 | West Dunbartonshire | 112,135 |
 | Hartlepool | 113,692 |
 
-The ratio of priciest to cheapest LAD is **≈10.9×** — Kensington &
-Chelsea's typical FTB price is roughly 11 Inverclydes.
+The ratio of priciest to cheapest LAD is **≈10.9×** — K&C's typical
+FTB price is roughly 11 Inverclydes.
 
 ## Files produced
 
 | File | Description |
 |---|---|
-| `outputs/county_stats.csv` | Per-LAD metrics used by the maps |
-| `outputs/data_profile.txt` | Dataset shape/coverage/missingness summary |
-| `outputs/national_trend.png` | FTB price trajectory by nation |
-| `outputs/top_bottom_growth.png` | Top/bottom 10 LAD bar chart |
-| `outputs/affordability_gap.png` | FTB vs FOO price over time, UK |
-| `outputs/map_full_period.png` | Static choropleth, 2012 → Jan 2026 |
-| `outputs/map_latest_12m.png` | Static choropleth, last 12 months |
-| `outputs/uk_ftb_interactive.html` | Interactive year-slider map |
+| `outputs/county_stats.csv` | Per-LAD nominal and real metrics |
+| `outputs/data_profile.txt` | Dataset shape/coverage/missingness |
+| `outputs/national_trend.png` | FTB price trajectory by nation (nominal + real) |
+| `outputs/top_bottom_growth.png` | Top/bottom 10 real-growth LADs |
+| `outputs/affordability_gap.png` | FTB vs FOO gap (nominal + real) |
+| `outputs/map_full_period_real.png` | **Headline real-terms choropleth** |
+| `outputs/map_full_period.png` | Nominal full-period choropleth |
+| `outputs/map_latest_12m_real.png` | Real-terms 12-month choropleth |
+| `outputs/map_latest_12m.png` | Nominal 12-month choropleth |
+| `outputs/uk_ftb_interactive_real.html` | Interactive year-slider, real £ |
+| `outputs/uk_ftb_interactive.html` | Interactive year-slider, nominal £ |
 
-Produced by `analysis/analyse.py` and `analysis/maps.py`.
+Produced by `analysis/analyse.py`, `analysis/maps.py`, and
+`analysis/inflation.py`.
